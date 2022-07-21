@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+/// A SwiftUI View for a Triangle shape
+///
+/// 
+/// ```swift
+/// Triangle()
+///     .frame(width: 100, height: 100)
+///     .foreground(.red)
+/// ```
 public struct Triangle: Shape {
     
     public init() {}
