@@ -21,4 +21,9 @@ public extension Collection where Self: BidirectionalCollection {
     func succeeding(_ index: Index) -> Element? {
         element(adjacent: index, offset: 1)
     }
+    
+    subscript(safely index: Index) -> Element? {
+        guard indices.contains(index) else { return nil }
+        return self[index]
+    }
 }
