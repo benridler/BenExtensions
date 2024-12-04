@@ -12,23 +12,33 @@ import SwiftUI
 final class PointTests: XCTestCase {
     func testComparable() throws {
         XCTAssertTrue(Point(x: 0, y: 0) < Point(x: 5, y: 5))
+        XCTAssertFalse(Point(x: 0, y: 0) < Point(x: 0, y: 0))
         
-        // 1x1
+        // 2x2
         XCTAssertTrue(Point(x: 0, y: 0) < Point(x: 1, y: 0))
         XCTAssertTrue(Point(x: 0, y: 0) < Point(x: 0, y: 1))
+        
+        XCTAssertTrue (Point(x: 1, y: 0) < Point(x: 0, y: 1))
+        XCTAssertFalse(Point(x: 1, y: 0) > Point(x: 0, y: 1))
         
         XCTAssertTrue(Point(x: 0, y: 1) < Point(x: 1, y: 1))
         XCTAssertTrue(Point(x: 1, y: 0) < Point(x: 1, y: 1))
         
         
-        //2x2
+        // 3x3
         XCTAssertTrue(Point(x: 0, y: 0) < Point(x: 1, y: 0))
         XCTAssertTrue(Point(x: 1, y: 0) < Point(x: 1, y: 1))
         XCTAssertTrue(Point(x: 1, y: 1) < Point(x: 1, y: 2))
         XCTAssertTrue(Point(x: 1, y: 2) < Point(x: 2, y: 2))
         
+        XCTAssertTrue(Point(x: 1, y: 0) < Point(x: 0, y: 2))
+        XCTAssertTrue(Point(x: 0, y: 1) < Point(x: 2, y: 0))
+        XCTAssertTrue(Point(x: 2, y: 1) < Point(x: 1, y: 2))
         
-        XCTAssertFalse(Point(x: 0, y: 0) < Point(x: 0, y: 0))
+        
+        // Negatives
+        XCTAssertTrue(Point(x: -1, y: -1) < Point(x: -1, y: 0))
+        
     }
     
     func testAddition() throws {
@@ -37,11 +47,11 @@ final class PointTests: XCTestCase {
         XCTAssertEqual(Point(x: 1, y: 1) + Point(x: 1, y: 1), Point(x: 2, y: 2))
         XCTAssertEqual(Point(x: 1, y: 1) + Point(x: 1, y: 1), Point(x: 2, y: 2))
 
-        let a = Int.random(in: -100...100)
-        let b = Int.random(in: -100...100)
-        let c = Int.random(in: -100...100)
-        let d = Int.random(in: -100...100)
-        XCTAssertEqual(Point(x: a, y: b) + Point(x: c, y: d), Point(x: a+c, y: b+d))
+        let x1 = Int.random(in: -100...100)
+        let y1 = Int.random(in: -100...100)
+        let x2 = Int.random(in: -100...100)
+        let y2 = Int.random(in: -100...100)
+        XCTAssertEqual(Point(x: x1, y: y1) + Point(x: x2, y: y2), Point(x: x1+x2, y: y1+y2))
     }
     
     func testSubtraction() throws {
@@ -50,11 +60,11 @@ final class PointTests: XCTestCase {
         XCTAssertEqual(Point(x: 1, y: 1) - Point(x: 1, y: 1), Point(x: 0, y: 0))
         XCTAssertEqual(Point(x: 2, y: 2) - Point(x: 1, y: 1), Point(x: 1, y: 1))
 
-        let a = Int.random(in: -100...100)
-        let b = Int.random(in: -100...100)
-        let c = Int.random(in: -100...100)
-        let d = Int.random(in: -100...100)
-        XCTAssertEqual(Point(x: a, y: b) - Point(x: c, y: d), Point(x: a-c, y: b-d))
+        let x1 = Int.random(in: -100...100)
+        let y1 = Int.random(in: -100...100)
+        let x2 = Int.random(in: -100...100)
+        let y2 = Int.random(in: -100...100)
+        XCTAssertEqual(Point(x: x1, y: y1) - Point(x: x2, y: y2), Point(x: x1-x2, y: y1-y2))
     }
     
     func testMultiplication() throws {
@@ -64,10 +74,10 @@ final class PointTests: XCTestCase {
         XCTAssertEqual(Point(x: 2, y: -2) * 2, Point(x: 4, y: -4))
         XCTAssertEqual(Point(x: 2, y: -2) * 0, Point(x: 0, y: 0))
 
-        let a = Int.random(in: -100...100)
-        let b = Int.random(in: -100...100)
-        let c = Int.random(in: -100...100)
-        XCTAssertEqual(Point(x: a, y: b) * c, Point(x: a*c, y: b*c))
+        let x = Int.random(in: -100...100)
+        let y = Int.random(in: -100...100)
+        let f = Int.random(in: -100...100)
+        XCTAssertEqual(Point(x: x, y: y) * f, Point(x: x*f, y: y*f))
     }
     
     func testDirectionTo() throws {
@@ -93,15 +103,15 @@ final class PointTests: XCTestCase {
     
     func testStepsTo() throws {
         let pZero = Point.zero
-        XCTAssertEqual(pZero.steps(to: pZero), .zero)
+        XCTAssertEqual(pZero.manhattenDistance(to: pZero), .zero)
         
-        XCTAssertEqual(pZero.steps(to: Point(x: 0, y: 1)), 1)
-        XCTAssertEqual(pZero.steps(to: Point(x: 0, y: -1)), 1)
-        XCTAssertEqual(pZero.steps(to: Point(x: 1, y: 0)), 1)
-        XCTAssertEqual(pZero.steps(to: Point(x: -1, y: 0)), 1)
+        XCTAssertEqual(pZero.manhattenDistance(to: Point(x: 0, y: 1)), 1)
+        XCTAssertEqual(pZero.manhattenDistance(to: Point(x: 0, y: -1)), 1)
+        XCTAssertEqual(pZero.manhattenDistance(to: Point(x: 1, y: 0)), 1)
+        XCTAssertEqual(pZero.manhattenDistance(to: Point(x: -1, y: 0)), 1)
         
-        XCTAssertEqual(Point(x: -2, y: -2).steps(to: Point(x: 2, y: 2)), 8)
-        XCTAssertEqual(Point(x: 2, y: 2).steps(to: Point(x:-2, y:-2)), 8)
+        XCTAssertEqual(Point(x: -2, y: -2).manhattenDistance(to: Point(x: 2, y: 2)), 8)
+        XCTAssertEqual(Point(x: 2, y: 2).manhattenDistance(to: Point(x:-2, y:-2)), 8)
     }
     
     func testIsStraightLineTo() {
@@ -186,13 +196,13 @@ final class PointTests: XCTestCase {
             accuracy: 0.0001
         )
         
-        let a = Int.random(in: -10...10)
-        let b = Int.random(in: -10...10)
-        let c = Int.random(in: -10...10)
-        let d = Int.random(in: -10...10)
+        let x1 = Int.random(in: -10...10)
+        let y1 = Int.random(in: -10...10)
+        let x2 = Int.random(in: -10...10)
+        let y2 = Int.random(in: -10...10)
         XCTAssertEqual(
-             pZero.angleBetween(a: Point(x: a, y: b), b: Point(x: c, y: d)).radians,
-            -pZero.angleBetween(a: Point(x: c, y: d), b: Point(x: a, y: b)).radians
+             pZero.angleBetween(a: Point(x: x1, y: y1), b: Point(x: x2, y: y2)).radians,
+            -pZero.angleBetween(a: Point(x: x2, y: y2), b: Point(x: x1, y: y1)).radians
         )
     }
 }

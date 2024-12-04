@@ -6,7 +6,7 @@ import Foundation
 import SwiftUI
 
 /// A representation of a position on a 2D plane
-public struct Point: Equatable, Codable, Hashable {
+public struct Point: Equatable, Codable, Hashable, Sendable {
     /// The X coordinate
     public let x: Int
     /// The Y coordinate
@@ -23,19 +23,24 @@ public extension Point {
 }
 
 extension Point: Comparable {
-    /// Bottom Left == (0,0)
-    /// Top Right == (n,n)
+    /// Top Left == (-n,-n)
+    /// Bottom Right == (n,n)
     ///
     /// (0,0) < (0,1) < (1,1)
-    /// (0,0) < (1,0) < (1,1)
+    /// (-1,1) < (0,0) < (1,0) < (1,1)
     /// (0,0) < (0,1) < (1,1) < (2,1) < (2,2)
+    ///
+    /// - Note: This is a top-left to bottom-right comparison. X-Axis is considered less than Y-Axis, eg. (2,1) < (1,2)
     public static func < (lhs: Point, rhs: Point) -> Bool {
-        if lhs.y < rhs.y {
-            return lhs.x <= rhs.x
-        } else if lhs.x < rhs.x {
-            return lhs.y <= rhs.y
+        let lPos = lhs.x + lhs.y
+        let rPos = rhs.x + rhs.y
+        
+        if lPos != rPos {
+            return lPos < rPos
+        } else if lhs.y != rhs.y {
+            return lhs.y < rhs.y
         } else {
-            return false
+            return lhs.x < rhs.x
         }
     }
 }
@@ -87,10 +92,12 @@ public extension Point {
         return sqrt(Double(xDiff*xDiff) + Double(yDiff*yDiff))
     }
     
-    /// Calculates the number of tiles needed to step to the destination ``Point``
+    /// Calculates the Manhatten distance to the destination ``Point``
+    ///
+    /// The Manhatten distance is also the absolute difference between the two points
     /// - Parameter destination: The Destination ``Point``
     /// - Returns: The amount of step to the destination ``Point``
-    func steps(to destination: Point) -> Int {
+    func manhattenDistance(to destination: Point) -> Int {
         abs(self.x - destination.x) + abs(self.y - destination.y)
     }
     
@@ -156,7 +163,7 @@ public extension Point {
     }
     
     func isAdjacent(to point: Point) -> Bool {
-        self.steps(to: point) == 1
+        self.manhattenDistance(to: point) == 1
     }
 }
 

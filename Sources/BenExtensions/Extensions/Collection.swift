@@ -27,3 +27,12 @@ public extension Collection where Self: BidirectionalCollection {
         return self[index]
     }
 }
+
+public extension Array where Element: RandomAccessCollection, Element.Index == Int {
+    func transposed() -> [[Element.Element]] {
+        guard let first else { return [] }
+        return (0..<first.count).map { column in
+            self.map { $0[column] }
+        }
+    }
+}

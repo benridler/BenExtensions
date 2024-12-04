@@ -16,7 +16,7 @@ import SwiftUI
 /// AnimatableText(value: height)
 ///     .animation(.linear, value: height)
 /// ```
-public struct AnimatableText: View, Animatable {
+public struct AnimatableText: View, @preconcurrency Animatable {
     private var value: Double
     private let format: String
     

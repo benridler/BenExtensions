@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import XCTest
+import Testing
 
 enum Position: Int, Equatable, CaseIterable {
     case first = 1
@@ -16,30 +16,30 @@ enum Position: Int, Equatable, CaseIterable {
     case fifth
 }
 
-final class CaseIterableTests: XCTestCase {
-    func testPreceding() {
+struct CaseIterableTests {
+    @Test func preceding() {
         let position = Position.third
-        XCTAssertEqual(position.preceding, .second)
+        #expect(position.preceding == .second)
     }
     
-    func testSucceeding() {
+    @Test func succeeding() {
         let position = Position.third
-        XCTAssertEqual(position.succeeding, .fourth)
+        #expect(position.succeeding == .fourth)
     }
     
-    func testPrecedingWhere() {
+    @Test func precedingWhere() {
         let position = Position.fifth
         let preceding = position.findPreceding(where: { position in
             position.rawValue % 4 == 1
         })
-        XCTAssertEqual(preceding, .first)
+        #expect(preceding == .first)
     }
    
-    func testSucceedingWhere() {
+    @Test func succeedingWhere() {
        let position = Position.first
        let preceding = position.findSucceeding(where: { position in
            position.rawValue % 3 == 1
        })
-       XCTAssertEqual(preceding, .fourth)
+        #expect(preceding == .fourth)
    }
 }

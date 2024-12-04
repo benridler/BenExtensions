@@ -4,7 +4,7 @@
 
 import Foundation
 
-public struct Grid<Value: Equatable>: MutableCollection {
+public struct Grid<Value: Equatable & Sendable>: MutableCollection, Sendable {
     public typealias Element = Value
     public typealias Index = Point
     
@@ -47,11 +47,29 @@ public struct Grid<Value: Equatable>: MutableCollection {
             underlying[y][x] = newValue
         }
     }
+
+// TODO: Fix Slice Implementation
+//    public subscript(bounds: ClosedRange<Int>) -> [[Value]] {
+//        Array(underlying[bounds])
+//    }
+//    
+//    public subscript(bounds: Range<Point>) -> Grid<Value> {
+//        .init(self[bounds.lowerBound.y...bounds.upperBound.y].map {
+//            Array($0[bounds.lowerBound.x...bounds.upperBound.x])
+//        })
+//    }
+//
+//    public subscript(bounds: Range<Point>) -> Slice<Grid<Value>> {
+//        .init(base: self, bounds: bounds)
+//        self[bounds.lowerBound.y...bounds.upperBound.y].map {
+//            Array($0[bounds.lowerBound.x...bounds.upperBound.x])
+//        }
+//    }
     
     public func index(after i: Index) -> Index {
-        if i.x < width {
+        if i.x < width - 1 {
             return .init(x: i.x + 1, y: i.y)
-        } else if i.y < height {
+        } else if i.y < height - 1 {
             return .init(x: .zero, y: i.y + 1)
         } else {
             return endIndex
@@ -66,11 +84,17 @@ public struct Grid<Value: Equatable>: MutableCollection {
     }
 }
 
+extension Grid: Equatable {
+    public static func == (lhs: Grid<Value>, rhs: Grid<Value>) -> Bool {
+        lhs.underlying == rhs.underlying
+    }
+}
+
 extension Grid: BidirectionalCollection {
     public func index(before i: Point) -> Point {
-        if i.x > .zero {
+        if i.x + 1 > .zero {
             return .init(x: i.x - 1, y: i.y)
-        } else if i.y > .zero {
+        } else if i.y + 1 > .zero {
             return .init(x: .zero, y: i.y - 1)
         } else {
             return startIndex
@@ -81,19 +105,12 @@ extension Grid: BidirectionalCollection {
 public extension Grid {
     func contains(_ point: Point) -> Bool {
         point.x >= .zero
-            && point.y >= .zero
-            && point.x < width
-            && point.y < height
+        && point.y >= .zero
+        && point.x < width
+        && point.y < height
     }
-    
-    /// Only works for Square grids
-    func transpose() -> Self {
-        var newGrid: Self = .init(underlying)
-        underlying.enumerated().forEach { yIndex, row in
-            row.enumerated().forEach { xIndex, value in
-                newGrid[xIndex, yIndex] = value
-            }
-        }
-        return newGrid
+
+    func transposed() -> Self {
+        .init(underlying.transposed())
     }
 }
