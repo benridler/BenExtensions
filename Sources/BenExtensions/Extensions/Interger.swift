@@ -4,7 +4,7 @@
 
 import Foundation
 
-extension Int {
+public extension Int {
     /// GCD of two numbers:
     static func gcd(_ a: Self, _ b: Self) -> Self {
         var (a, b) = (a, b)
@@ -15,12 +15,12 @@ extension Int {
     }
 
     /// LCM of two numbers:
-    static func lcm(a: Self, b: Self) -> Self {
+    static func lcm(_ a: Self, _ b: Self) -> Self {
         return (a / gcd(a, b)) * b
     }
 }
 
-extension [Int] {
+public extension [Int] {
     /// GCD of a vector of numbers:
     func gcd() -> Element {
         self.reduce(.zero, Int.gcd)

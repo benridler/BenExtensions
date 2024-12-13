@@ -52,7 +52,7 @@ public struct Grid<Value: Equatable & Sendable>: MutableCollection, Sendable {
 //    public subscript(bounds: ClosedRange<Int>) -> [[Value]] {
 //        Array(underlying[bounds])
 //    }
-//    
+//
 //    public subscript(bounds: Range<Point>) -> Grid<Value> {
 //        .init(self[bounds.lowerBound.y...bounds.upperBound.y].map {
 //            Array($0[bounds.lowerBound.x...bounds.upperBound.x])
@@ -103,6 +103,7 @@ extension Grid: BidirectionalCollection {
 }
 
 public extension Grid {
+    /// Whether the point lies within the grid
     func contains(_ point: Point) -> Bool {
         point.x >= .zero
         && point.y >= .zero

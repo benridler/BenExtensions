@@ -24,6 +24,9 @@ public enum Direction: CaseIterable, Sendable {
         }
     }
     
+    /// The opposite direction to this direction
+    ///
+    /// e.g. Up -> Down, Right -> Left
     public var opposite: Self {
         switch self {
         case .up:
@@ -34,6 +37,38 @@ public enum Direction: CaseIterable, Sendable {
             return .up
         case .left:
             return .right
+        }
+    }
+    
+    /// The direction to the right of this direction
+    ///
+    /// e.g. Up -> Right, Right -> Down
+    public var clockwise: Self {
+        switch self {
+        case .up:
+            return .right
+        case .right:
+            return .down
+        case .down:
+            return .left
+        case .left:
+            return .up
+        }
+    }
+    
+    /// The direction to the left of this direction
+    ///
+    /// e.g. Up -> Left, Left -> Down
+    private var anticlockwise: Self {
+        switch self {
+        case .up:
+            return .left
+        case .right:
+            return .up
+        case .down:
+            return .right
+        case .left:
+            return .down
         }
     }
     
