@@ -60,7 +60,7 @@ public extension Point {
     
     /// Calculates the next optimal ``Direction`` to move towards destination
     ///
-    /// Prioritises Right & Left over Up & Down.
+    /// Prioritises East & West over North & South.
     ///
     /// Returns nil if the destination equals the point
     /// - Parameter destination: The Destination ``Point``
@@ -71,13 +71,13 @@ public extension Point {
         let diff = destination - self
     
         if diff.y == .zero {
-            return diff.x > .zero ? .right : .left
+            return diff.x > .zero ? .e : .w
         } else if diff.x == .zero {
-            return diff.y > .zero ? .up : .down
+            return diff.y > .zero ? .s : .n
         } else if abs(diff.x) >= abs(diff.y) {
-            return diff.x > 0 ? .right : .left
+            return diff.x > 0 ? .e : .w
         } else if abs(diff.y) >= abs(diff.x) {
-            return diff.y > 0 ? .up : .down
+            return diff.y > 0 ? .s : .n
         }
             
         return nil

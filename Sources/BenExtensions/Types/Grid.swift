@@ -115,3 +115,31 @@ public extension Grid {
         .init(underlying.transposed())
     }
 }
+
+extension Grid: CustomStringConvertible {
+    public var description: String {
+        """
+        H: \(height), W: \(width)
+        \(underlying.map { $0.map { String(describing: $0) }.joined(separator: "") }.joined(separator: "\n"))
+        """
+    }
+    
+    public func overlay(with overlay: [Point: String]) -> String {
+        let overlayed: String = underlying.indices.map { y in
+            let row = underlying[y]
+            return row.indices.map { x in
+                if let overlay = overlay[Point(x: x, y: y)] {
+                    return overlay
+                } else {
+                    return String(describing: row[x])
+                }
+            }.joined()
+        }.joined(separator: "\n")
+        
+        
+        return """
+        H: \(height), W: \(width)
+        \(overlayed)
+        """
+    }
+}
