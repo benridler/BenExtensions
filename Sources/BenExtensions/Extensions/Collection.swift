@@ -36,3 +36,14 @@ public extension Array where Element: RandomAccessCollection, Element.Index == I
         }
     }
 }
+
+public extension Sequence where Element: Comparable {
+    /// Computes the minimum and maximum elements of the sequence.
+    func minMax() -> (min: Element, max: Element)? {
+        guard let first = self.first(where: { _ in true }) else { return nil }
+        
+        return reduce((first, first)) { result, value in
+            (Swift.min(result.0, value), Swift.max(result.1, value))
+        }
+    }
+}
